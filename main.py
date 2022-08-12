@@ -11,10 +11,9 @@ cur_time = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
 print("date and time =", cur_time)
 
 # setup webdriver
-path = r'C:\Users\KienTT2\chromedriver_win32\chromedriver.exe'
 op = webdriver.ChromeOptions()
 op.add_argument('headless')
-driver = webdriver.Chrome(options=op, executable_path=path)
+driver = webdriver.Chrome(options=op, executable_path='chromedriver.exe')
 
 
 # Connect to MariaDB Platform
@@ -33,40 +32,13 @@ except mariadb.Error as e:
 # Get Cursor
 cur = conn.cursor()
 
-sql_insert = "INSERT INTO wp_truyen_posts (post_author, " \
-    "post_date, " \
-    "post_date_gmt, " \
-    "post_content, " \
-    "post_title, " \
-    "post_excerpt, " \
-    "to_ping, " \
-    "pinged, " \
-    "post_content_filtered, " \
-    "post_status, " \
-    "comment_status, " \
-    "ping_status, " \
-    "post_name, " \
-    "post_modified, " \
-    "post_modified_gmt, " \
-    "guid, " \
-    "post_type, " \
-    "post_parent, " \
-    "comment_count`" \
-    ") VALUES (" \
-    "1, " \
-    "'{post_date}', " \
-    "'{post_date_gmt}', " \
-    "'{post_content}', " \
-    "'{post_title}', '', '', '', '', " \
-    "'publish', " \
-    "'open', " \
-    "'open', " \
-    "'{post_name}', " \
-    "'{post_modified}', " \
-    "'{post_modified_gmt}', " \
-    "'{guid}', " \
-    "'{post_type}', " \
-    "{post_parent} ,0);"
+sql_insert = "INSERT INTO wp_truyen_posts (post_author, post_date, post_date_gmt, post_content, post_title, " \
+             "post_excerpt, to_ping, pinged, post_content_filtered, post_status, comment_status, ping_status, " \
+             "post_name, post_modified, post_modified_gmt, guid, post_type, post_parent, comment_count`" \
+            ") VALUES (" \
+            "1, '{post_date}', '{post_date_gmt}', '{post_content}', '{post_title}', '', '', '', '', " \
+            "'publish', 'open', 'open', '{post_name}', '{post_modified}', '{post_modified_gmt}', '{guid}', " \
+            "'{post_type}', {post_parent} ,0);"
 
 
 for chapter in range(1, 175):
