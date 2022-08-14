@@ -6,7 +6,6 @@ charset-normalizer==2.1.0
 cryptography==37.0.4
 h11==0.13.0
 idna==3.3
-mariadb==1.1.4
 outcome==1.2.0
 pycparser==2.21
 pyOpenSSL==22.0.0
