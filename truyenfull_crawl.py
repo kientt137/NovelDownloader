@@ -35,6 +35,8 @@ if __name__ == "__main__":
     with open("truyenfull_list.json", 'r') as f:
         list_truyen = json.load(f)
         for id, data in list_truyen.items():
+            if int(id) < 8000:
+                continue
             page_html = requests.get(data['url'])
             des = re.findall(descripion_re, page_html.text, re.DOTALL)
             if len(des) == 0:
