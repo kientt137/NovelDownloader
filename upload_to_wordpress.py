@@ -39,9 +39,8 @@ if __name__ == '__main__':
                             "author": 1,
                             "excerpt": "",
                             "categories": ",".join(categories_id),
-                            "terms": {
-                                'nguon': 'suu-tamm'
-                            }
+                            "tac-gia": "",
+                            "nguon": ""
                         }
                         res = requests.post(INSERT_POST_API, data=truyen_post, auth=AUTH)
                         if res.status_code == 201:
