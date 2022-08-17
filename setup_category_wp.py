@@ -26,7 +26,7 @@ for category in set_category:
         "name": category,
         "slug": slug
     }
-    response = requests.post(INSERT_CATEGORY_API, data=category_data, auth=AUTH)
+    response = requests.post(TAXONOMY_API.format(HOST_PATH, CATEGORY), json=category_data, auth=AUTH)
     if response.status_code == 201:
         print("Add category " + category + " successfully")
         categories_id[slug] = response.json()['id']
