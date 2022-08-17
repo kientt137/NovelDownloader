@@ -39,6 +39,11 @@ if __name__ == '__main__':
                             "author": 1,
                             "excerpt": "",
                             "categories": ",".join(categories_id),
+                            "meta": {
+                                "tw_multi_chap": 1,
+                                "tw_status": "Full",
+                                "tw_loai": "Dịch"
+                            },
                             "tac-gia": "",
                             "nguon": ""
                         }

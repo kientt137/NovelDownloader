@@ -21,13 +21,15 @@ set_category = ['Bách Hợp', 'Cung Đấu', 'Cổ Đại', 'Dị Giới', 'D�
 
 categories_id = {}
 for category in set_category:
+    slug = Utils.name2slug(category)
     category_data = {
         "name": category,
-        "slug": Utils.name2slug(category)
+        "slug": slug
     }
     response = requests.post(INSERT_CATEGORY_API, data=category_data, auth=AUTH)
     if response.status_code == 201:
-        categories_id[Utils.name2slug(category)] = response.json()['id']
+        print("Add category " + category + " successfully")
+        categories_id[slug] = response.json()['id']
 
 with open("category_id_list.json".format(id), 'a') as f:
     json.dump(categories_id, f, indent=4, ensure_ascii=False)
