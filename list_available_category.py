@@ -1,7 +1,7 @@
 import json
 import requests
-from Utilities import Utilities as Utils
-from config import *
+from Toolbox.Utilities import Utilities as Utils
+from Toolbox.config import *
 
 # set_category = []
 

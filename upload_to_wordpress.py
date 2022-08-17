@@ -4,8 +4,8 @@ import os.path
 import json
 import requests
 import random
-from config import *
-from Utilities import Utilities as Utils
+from Toolbox.config import *
+from Toolbox.Utilities import Utilities as Utils
 
 
 if __name__ == '__main__':

@@ -12,7 +12,7 @@ url = "https://m.yushubo.cc/read_83404_{}.html"
 # setup webdriver
 op = webdriver.ChromeOptions()
 op.add_argument('headless')
-driver = webdriver.Chrome(options=op, executable_path='chromedriver.exe')
+driver = webdriver.Chrome(options=op, executable_path='Toolbox/chromedriver.exe')
 
 
 # Connect to MariaDB Platform

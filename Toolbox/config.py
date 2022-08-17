@@ -1,7 +1,7 @@
-PATH_TO_LIST_TRUYEN = 'truyenfull_list.json'
-PATH_TO_TRUYEN_DES = 'truyen_description.json'
-PATH_TO_CHAPTER_FOLDER = 'truyenfull'
-PATH_TO_CATEGORIES_LIST = 'category_id_list.json'
+PATH_TO_LIST_TRUYEN = '../truyenfull_list.json'
+PATH_TO_TRUYEN_DES = '../truyen_description.json'
+PATH_TO_CHAPTER_FOLDER = '../truyenfull'
+PATH_TO_CATEGORIES_LIST = '../category_id_list.json'
 
 HOST_PATH = "http://192.168.1.60/truyenraw-wordpress"
 
