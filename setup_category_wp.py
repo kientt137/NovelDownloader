@@ -31,5 +31,5 @@ for category in set_category:
         print("Add category " + category + " successfully")
         categories_id[slug] = response.json()['id']
 
-with open("category_id_list.json".format(id), 'a') as f:
+with open("categories_id_list.json".format(id), 'a') as f:
     json.dump(categories_id, f, indent=4, ensure_ascii=False)

@@ -39,7 +39,7 @@ class Utilities:
             handler.write(img_data)
 
     @staticmethod
-    def get_taxonomy_id(name, type=CATEGORY):
+    def get_taxonomy_id(list_taxonomy, type=CATEGORY):
         if not os.path.exists(PATH_TO_TAXONOMY_LIST.format(type)):
             taxonomy_list = {}
             res = requests.get(TAXONOMY_API.format(HOST_PATH, type), auth=AUTH)
@@ -48,22 +48,25 @@ class Utilities:
                 for data in data_json:
                     taxonomy_list[data['slug']] = data['id']
             Utilities.dump_json(PATH_TO_TAXONOMY_LIST.format(type), taxonomy_list)
-        name_slug = Utilities.name2slug(name)
-        taxonomy_list = Utilities.load_json(PATH_TO_TAXONOMY_LIST.format(type))
-        if name_slug in taxonomy_list:
-            return str(taxonomy_list[name_slug])
-        else:
-            new_data = {
-                "name": name,
-                "slug": name_slug
-            }
-            res = requests.post(TAXONOMY_API.format(HOST_PATH, type), json=new_data, auth=AUTH)
-            if res.status_code == 201:
-                id = res.json()['id']
-                print("Inserted new {}: {}".format(type, name))
-                taxonomy_list[name_slug] = id
-                Utilities.dump_json(PATH_TO_TAXONOMY_LIST.format(type), taxonomy_list)
-                return id
+        result = []
+        for taxonomy in list_taxonomy:
+            name_slug = Utilities.name2slug(taxonomy)
+            taxonomy_list = Utilities.load_json(PATH_TO_TAXONOMY_LIST.format(type))
+            if name_slug in taxonomy_list:
+                result.append(str(taxonomy_list[name_slug]))
+            else:
+                new_data = {
+                    "name": taxonomy,
+                    "slug": name_slug
+                }
+                res = requests.post(TAXONOMY_API.format(HOST_PATH, type), json=new_data, auth=AUTH)
+                if res.status_code == 201:
+                    id = res.json()['id']
+                    print("Inserted new {}: {}".format(type, taxonomy))
+                    taxonomy_list[name_slug] = id
+                    Utilities.dump_json(PATH_TO_TAXONOMY_LIST.format(type), taxonomy_list)
+                    result.append(str(id))
+        return ','.join(result)
 
     @staticmethod
     def load_json(path):
@@ -78,4 +81,9 @@ class Utilities:
     @staticmethod
     def dump_json(path, data):
         with open(path, 'w') as f:
+            json.dump(data, f, indent=4, ensure_ascii=False)
+
+    @staticmethod
+    def dump_json_a(path, data):
+        with open(path, 'a') as f:
             json.dump(data, f, indent=4, ensure_ascii=False)
