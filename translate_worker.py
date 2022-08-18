@@ -45,4 +45,3 @@ for i in sorted(dic_chapter_name.keys()):
             "parent": 6
         }
         upload = requests.post(url_api, json=post_chap_req, auth=('admin', 'Thuong@1212'))
-

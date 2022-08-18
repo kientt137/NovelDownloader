@@ -71,7 +71,8 @@ class Utilities:
             with open(path, 'r', encoding='utf8') as f:
                 return json.load(f)
         except Exception as e:
-            print("Load json from " + path + ": file not exist")
+            print("Load json from " + path + ": something has wrong")
+            print(str(e))
             exit()
 
     @staticmethod
