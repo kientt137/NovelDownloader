@@ -1,6 +1,9 @@
+import time
+
 import requests
 from unidecode import unidecode
 from Toolbox.config import *
+from Toolbox.Debug import Debug
 import os.path
 import json
 import re
@@ -42,11 +45,20 @@ class Utilities:
     def get_taxonomy_id(list_taxonomy, type=CATEGORY):
         if not os.path.exists(PATH_TO_TAXONOMY_LIST.format(type)):
             taxonomy_list = {}
-            res = requests.get(TAXONOMY_API.format(HOST_PATH, type), auth=AUTH)
+            res = Utilities.get_fetch(TAXONOMY_API.format(HOST_PATH, type))
             data_json = res.json()
             if len(data_json) > 0:
                 for data in data_json:
                     taxonomy_list[data['slug']] = data['id']
+            number_of_page = res.headers['X-WP-TotalPages']
+            Debug.log("Taxonomy type {} has total {} records and split to {} pages"
+                      .format(type, res.headers['X-WP-Total'], number_of_page))
+            for i in range(2, int(number_of_page) + 1):
+                res = Utilities.get_fetch(TAXONOMY_API.format(HOST_PATH, type) + "?page={}".format(i))
+                data_json = res.json()
+                if len(data_json) > 0:
+                    for data in data_json:
+                        taxonomy_list[data['slug']] = data['id']
             Utilities.dump_json(PATH_TO_TAXONOMY_LIST.format(type), taxonomy_list)
         result = []
         for taxonomy in list_taxonomy:
@@ -59,10 +71,10 @@ class Utilities:
                     "name": taxonomy,
                     "slug": name_slug
                 }
-                res = requests.post(TAXONOMY_API.format(HOST_PATH, type), json=new_data, auth=AUTH)
+                res = Utilities.post_fetch(TAXONOMY_API.format(HOST_PATH, type), new_data,)
                 if res.status_code == 201:
                     id = res.json()['id']
-                    print("Inserted new {}: {}".format(type, taxonomy))
+                    Debug.log("Inserted new {}: {}".format(type, taxonomy))
                     taxonomy_list[name_slug] = id
                     Utilities.dump_json(PATH_TO_TAXONOMY_LIST.format(type), taxonomy_list)
                     result.append(str(id))
@@ -74,8 +86,8 @@ class Utilities:
             with open(path, 'r', encoding='utf8') as f:
                 return json.load(f)
         except Exception as e:
-            print("Load json from " + path + ": something has wrong")
-            print(str(e))
+            Debug.log("Load json from " + path + ": something has wrong")
+            Debug.log(str(e))
             exit()
 
     @staticmethod
@@ -87,3 +99,23 @@ class Utilities:
     def dump_json_a(path, data):
         with open(path, 'a') as f:
             json.dump(data, f, indent=4, ensure_ascii=False)
+
+    @staticmethod
+    def post_fetch(url, data, try_again=True):
+        Debug.log("Request POST {}".format(url))
+        res = requests.post(url, json=data, auth=AUTH)
+        while res.status_code != 201 and try_again:
+            Debug.log("Error {} with POST request {}. Try again after 5 seconds".format(res.status_code, url))
+            time.sleep(5)
+            res = requests.post(url, json=data, auth=AUTH)
+        return res
+
+    @staticmethod
+    def get_fetch(url, try_again=True):
+        Debug.log("Request GET {}".format(url))
+        res = requests.get(url, auth=AUTH)
+        while res.status_code != 200 and try_again:
+            Debug.log("Error {} with GET request {}. Try again after 5 seconds".format(res.status_code, url))
+            time.sleep(5)
+            res = requests.get(url, auth=AUTH)
+        return res
