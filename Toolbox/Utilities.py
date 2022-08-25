@@ -101,11 +101,11 @@ class Utilities:
             json.dump(data, f, indent=4, ensure_ascii=False)
 
     @staticmethod
-    def post_fetch(url, data, try_again=True):
+    def post_fetch(url, data, need_auth=True):
         while True:
             Debug.log("Request POST {}".format(url))
             try:
-                res = requests.post(url, json=data, auth=AUTH)
+                res = requests.post(url, json=data, auth=AUTH if need_auth else None)
                 if res.status_code == 201:
                     return res
                 else:
@@ -116,11 +116,11 @@ class Utilities:
             time.sleep(5)
 
     @staticmethod
-    def get_fetch(url, try_again=True):
+    def get_fetch(url, need_auth=True):
         while True:
             Debug.log("Request GET {}".format(url))
             try:
-                res = requests.get(url, auth=AUTH)
+                res = requests.get(url, auth=AUTH if need_auth else None)
                 if res.status_code == 200:
                     return res
                 else:
@@ -129,3 +129,10 @@ class Utilities:
                 Debug.log(str(e))
                 Debug.log("Try again after 5 seconds")
             time.sleep(5)
+
+    @staticmethod
+    def translate(data):
+        url = 'http://www.vietphrase.info/Vietphrase/TranslateVietPhraseS'
+        obj_data = {'chineseContent': data}
+        res = Utilities.post_fetch(url, obj_data, need_auth=False)
+        return res.text
