@@ -102,20 +102,30 @@ class Utilities:
 
     @staticmethod
     def post_fetch(url, data, try_again=True):
-        Debug.log("Request POST {}".format(url))
-        res = requests.post(url, json=data, auth=AUTH)
-        while res.status_code != 201 and try_again:
-            Debug.log("Error {} with POST request {}. Try again after 5 seconds".format(res.status_code, url))
+        while True:
+            Debug.log("Request POST {}".format(url))
+            try:
+                res = requests.post(url, json=data, auth=AUTH)
+                if res.status_code == 201:
+                    return res
+                else:
+                    Debug.log("Error {} with POST request {}. Try again after 5 seconds".format(res.status_code, url))
+            except requests.RequestException as e:
+                Debug.log(str(e))
+                Debug.log("Try again after 5 seconds")
             time.sleep(5)
-            res = requests.post(url, json=data, auth=AUTH)
-        return res
 
     @staticmethod
     def get_fetch(url, try_again=True):
-        Debug.log("Request GET {}".format(url))
-        res = requests.get(url, auth=AUTH)
-        while res.status_code != 200 and try_again:
-            Debug.log("Error {} with GET request {}. Try again after 5 seconds".format(res.status_code, url))
+        while True:
+            Debug.log("Request GET {}".format(url))
+            try:
+                res = requests.get(url, auth=AUTH)
+                if res.status_code == 200:
+                    return res
+                else:
+                    Debug.log("Error {} with GET request {}. Try again after 5 seconds".format(res.status_code, url))
+            except requests.RequestException as e:
+                Debug.log(str(e))
+                Debug.log("Try again after 5 seconds")
             time.sleep(5)
-            res = requests.get(url, auth=AUTH)
-        return res
